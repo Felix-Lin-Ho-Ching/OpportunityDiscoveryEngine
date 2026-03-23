@@ -1,0 +1,71 @@
+[
+    {
+        "source": "Industry newsletter",
+        "source_type": "newsletter",
+        "title": "Independent clinics losing revenue from missed insurance follow-up",
+        "text": "Clinic managers say claims follow-up is still manual, backlog is growing weekly, and delayed reimbursements are hurting cash flow. They want a reliable workflow for triage, status checks, and reminder emails.",
+        "url": "https://example.com/clinic-claims",
+        "timestamp": "2026-02-11T09:10:00Z",
+        "engagement": {
+            "opens": 810,
+            "shares": 41
+        }
+    },
+    {
+        "source": "Shopify community",
+        "source_type": "forum",
+        "title": "Sellers overwhelmed by chargeback evidence preparation",
+        "text": "Small ecommerce sellers report repetitive manual document gathering for each dispute. Lost disputes are cutting profit margin. They need faster evidence packaging and submission reminders.",
+        "url": "https://example.com/shopify-chargebacks",
+        "timestamp": "2026-02-13T17:42:00Z",
+        "engagement": {
+            "comments": 58,
+            "likes": 133
+        }
+    },
+    {
+        "source": "Reddit r/smallbusiness",
+        "source_type": "reddit",
+        "title": "Agency inbox follow-up chaos causing missed deals",
+        "text": "Our sales inbox is a mess, leads are missed daily, follow-up is manual, and conversion is dropping. Looking for an automated qualification and scheduling process.",
+        "url": "https://reddit.com/r/smallbusiness/example",
+        "timestamp": "2026-02-07T21:04:00Z",
+        "engagement": {
+            "upvotes": 229,
+            "comments": 87
+        }
+    },
+    {
+        "source": "Operations podcast transcript",
+        "source_type": "podcast",
+        "title": "Warehouse teams waste hours on manual receiving reconciliation",
+        "text": "COO describes daily spreadsheet reconciliation between purchase orders and received goods, frequent error corrections, and weekly stockout surprises that hurt sales.",
+        "url": "https://example.com/warehouse-reconciliation",
+        "timestamp": "2026-02-15T12:00:00Z",
+        "engagement": {
+            "downloads": 5300
+        }
+    },
+    {
+        "source": "Maker blog",
+        "source_type": "blog",
+        "title": "Team wants nicer logo colors",
+        "text": "A founder wants a new logo palette and brainstorming support for a site refresh.",
+        "url": "https://example.com/logo-colors",
+        "timestamp": "2026-02-10T08:00:00Z",
+        "engagement": {
+            "likes": 12
+        }
+    },
+    {
+        "source": "Field interview notes",
+        "source_type": "interview",
+        "title": "Local logistics operators struggle with late invoice collection",
+        "text": "Dispatch and accounting teams manually chase outstanding invoices each week. Late follow-up delays payroll and limits fuel purchases. They need automated reminders, call prep notes, and payment tracking reports.",
+        "url": "https://example.com/logistics-invoices",
+        "timestamp": "2026-02-16T14:30:00Z",
+        "engagement": {
+            "interviews": 9
+        }
+    }
+]
