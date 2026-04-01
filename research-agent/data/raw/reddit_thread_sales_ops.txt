@@ -1,0 +1,3 @@
+﻿Our reps complain that note cleanup is still manual and takes too long after every call.
+Search is broken when trying to find action items from last quarter.
+Pricing feels expensive for a tool that still needs constant editing.

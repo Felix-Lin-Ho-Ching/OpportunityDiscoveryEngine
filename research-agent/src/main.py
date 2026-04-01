@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from .config import NICHE
 from .extract import extract_complaints
@@ -18,3 +18,18 @@ def run_pipeline() -> PipelineResult:
     complaints = extract_complaints(sources)
     themes = group_complaints(complaints)
     ranked = rank_themes(themes)
+
+    result = PipelineResult(
+        niche=niche,
+        source_count=len(sources),
+        extracted_count=len(complaints),
+        ranked_themes=ranked,
+    )
+
+    write_report(result)
+    print("Pipeline complete.")
+    return result
+
+
+if __name__ == "__main__":
+    run_pipeline()

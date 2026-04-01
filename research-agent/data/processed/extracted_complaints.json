@@ -1,0 +1,56 @@
+[
+  {
+    "source_id": "capterra_feedback_sample",
+    "sentence": "﻿The product misses speaker context and puts wrong owners on tasks.",
+    "severity_hints": 0,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "capterra_feedback_sample",
+    "sentence": "It is difficult to share highlights with managers without reformatting everything.",
+    "severity_hints": 1,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "capterra_feedback_sample",
+    "sentence": "Support is slow when we report bugs before renewal.",
+    "severity_hints": 0,
+    "buying_hints": 1
+  },
+  {
+    "source_id": "g2_review_dump_1",
+    "sentence": "﻿The transcript summary is often inaccurate and misses key objections from the prospect.",
+    "severity_hints": 0,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "g2_review_dump_1",
+    "sentence": "Setup was frustrating because the CRM fields did not map correctly.",
+    "severity_hints": 0,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "g2_review_dump_1",
+    "sentence": "We canceled after two months because reps did not trust the notes.",
+    "severity_hints": 0,
+    "buying_hints": 1
+  },
+  {
+    "source_id": "reddit_thread_sales_ops",
+    "sentence": "﻿Our reps complain that note cleanup is still manual and takes too long after every call.",
+    "severity_hints": 1,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "reddit_thread_sales_ops",
+    "sentence": "Search is broken when trying to find action items from last quarter.",
+    "severity_hints": 0,
+    "buying_hints": 0
+  },
+  {
+    "source_id": "reddit_thread_sales_ops",
+    "sentence": "Pricing feels expensive for a tool that still needs constant editing.",
+    "severity_hints": 0,
+    "buying_hints": 0
+  }
+]

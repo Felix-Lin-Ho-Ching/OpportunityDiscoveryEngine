@@ -1,0 +1,3 @@
+﻿The product misses speaker context and puts wrong owners on tasks.
+It is difficult to share highlights with managers without reformatting everything.
+Support is slow when we report bugs before renewal.

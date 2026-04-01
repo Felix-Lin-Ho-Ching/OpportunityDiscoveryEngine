@@ -1,0 +1,92 @@
+[
+  {
+    "theme_id": "theme_1",
+    "label": "﻿The product misses speaker context and puts wrong owners on tasks.",
+    "complaint_count": 1,
+    "evidence": [
+      "﻿The product misses speaker context and puts wrong owners on tasks."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_2",
+    "label": "It is difficult to share highlights with managers without reformatting everythin",
+    "complaint_count": 1,
+    "evidence": [
+      "It is difficult to share highlights with managers without reformatting everything."
+    ],
+    "severity_score": 1,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_3",
+    "label": "Support is slow when we report bugs before renewal.",
+    "complaint_count": 1,
+    "evidence": [
+      "Support is slow when we report bugs before renewal."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 1
+  },
+  {
+    "theme_id": "theme_4",
+    "label": "﻿The transcript summary is often inaccurate and misses key objections from the p",
+    "complaint_count": 1,
+    "evidence": [
+      "﻿The transcript summary is often inaccurate and misses key objections from the prospect."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_5",
+    "label": "Setup was frustrating because the CRM fields did not map correctly.",
+    "complaint_count": 1,
+    "evidence": [
+      "Setup was frustrating because the CRM fields did not map correctly."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_6",
+    "label": "We canceled after two months because reps did not trust the notes.",
+    "complaint_count": 1,
+    "evidence": [
+      "We canceled after two months because reps did not trust the notes."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 1
+  },
+  {
+    "theme_id": "theme_7",
+    "label": "﻿Our reps complain that note cleanup is still manual and takes too long after ev",
+    "complaint_count": 1,
+    "evidence": [
+      "﻿Our reps complain that note cleanup is still manual and takes too long after every call."
+    ],
+    "severity_score": 1,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_8",
+    "label": "Search is broken when trying to find action items from last quarter.",
+    "complaint_count": 1,
+    "evidence": [
+      "Search is broken when trying to find action items from last quarter."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 0
+  },
+  {
+    "theme_id": "theme_9",
+    "label": "Pricing feels expensive for a tool that still needs constant editing.",
+    "complaint_count": 1,
+    "evidence": [
+      "Pricing feels expensive for a tool that still needs constant editing."
+    ],
+    "severity_score": 0,
+    "buying_signal_score": 0
+  }
+]
