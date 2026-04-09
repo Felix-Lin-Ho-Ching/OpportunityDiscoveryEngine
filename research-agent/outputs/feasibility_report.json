@@ -1,0 +1,38 @@
+[
+  {
+    "title": "B2B grant matching copilot",
+    "decision": "go",
+    "score": 0.77,
+    "rationale": "Decision go with score 0.77 based on confidence 0.77, estimated value medium, and 2 tracked risks.",
+    "technical_complexity": "low",
+    "go_to_market_readiness": "needs_customer_validation",
+    "dependencies": [
+      "Customer interviews with 5 target accounts",
+      "Access to sample workflow data",
+      "Validation of pricing appetite for small and midsize exporters"
+    ],
+    "next_steps": [
+      "Recruit design partners",
+      "Prototype the narrowest workflow automation path",
+      "Measure time-to-value over a two-week pilot"
+    ]
+  },
+  {
+    "title": "Maintenance quote response assistant",
+    "decision": "go",
+    "score": 0.85,
+    "rationale": "Decision go with score 0.85 based on confidence 0.8, estimated value high, and 2 tracked risks.",
+    "technical_complexity": "medium",
+    "go_to_market_readiness": "ready_for_design_partners",
+    "dependencies": [
+      "Customer interviews with 5 target accounts",
+      "Access to sample workflow data",
+      "Validation of pricing appetite for commercial facilities contractors"
+    ],
+    "next_steps": [
+      "Recruit design partners",
+      "Prototype the narrowest workflow automation path",
+      "Measure time-to-value over a two-week pilot"
+    ]
+  }
+]
