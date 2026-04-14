@@ -10,7 +10,7 @@ from extraction import Opportunity
 from scoring import DEFAULT_WEIGHTS, OpportunityScore
 
 
-DB_PATH = Path("opportunities.db")
+DB_PATH = Path("outputs/ori_research.db")
 
 
 DEFAULT_MIN_EXEC_SCORE = 6.2
@@ -20,8 +20,16 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _connect(db_path: Path) -> sqlite3.Connection:
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA journal_mode=OFF")
+    conn.execute("PRAGMA synchronous=OFF")
+    return conn
+
+
 def init_db(db_path: Path = DB_PATH) -> None:
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS opportunities (
@@ -99,6 +107,73 @@ def init_db(db_path: Path = DB_PATH) -> None:
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS research_tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                mode TEXT NOT NULL,
+                query TEXT NOT NULL,
+                payload_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS research_reports (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                mode TEXT NOT NULL,
+                report_json TEXT NOT NULL,
+                report_markdown TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS pain_signals (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                pain_id TEXT NOT NULL,
+                source TEXT NOT NULL,
+                source_type TEXT NOT NULL,
+                title TEXT NOT NULL,
+                url TEXT NOT NULL,
+                severity INTEGER NOT NULL,
+                pain_terms_json TEXT NOT NULL,
+                evidence TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS theme_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                opportunity_id TEXT NOT NULL,
+                theme TEXT NOT NULL,
+                score REAL NOT NULL,
+                pain_count INTEGER NOT NULL,
+                payload_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS handoff_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                status TEXT NOT NULL,
+                next_agent TEXT,
+                payload_json TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
 
         row = conn.execute("SELECT COUNT(*) FROM policy_state").fetchone()
         if row and row[0] == 0:
@@ -113,7 +188,7 @@ def init_db(db_path: Path = DB_PATH) -> None:
 
 def get_policy_state(db_path: Path = DB_PATH) -> dict[str, Any]:
     init_db(db_path)
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         row = conn.execute(
             "SELECT policy_version, min_exec_score, weights_json, updated_at, update_reason FROM policy_state WHERE id = 1"
         ).fetchone()
@@ -133,7 +208,7 @@ def update_policy_state(min_exec_score: float, weights: dict[str, float], reason
     new_version = state["policy_version"] + 1
     timestamp = utc_now()
 
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         conn.execute(
             """
             UPDATE policy_state
@@ -159,7 +234,7 @@ def save_opportunity(
     analysis_reasons: list[str],
     db_path: Path = DB_PATH,
 ) -> int:
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         cur = conn.execute(
             """
             INSERT INTO opportunities (
@@ -197,7 +272,7 @@ def save_opportunity(
 
 
 def log_execution(opportunity_id: int, score: float, policy_version: int, payload: dict[str, Any], db_path: Path = DB_PATH) -> int:
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         cur = conn.execute(
             """
             INSERT INTO executions (opportunity_id, policy_version, score, payload_json, executed_at)
@@ -209,7 +284,7 @@ def log_execution(opportunity_id: int, score: float, policy_version: int, payloa
 
 
 def record_outcome(execution_id: int, won: bool, revenue: float, notes: str = "", db_path: Path = DB_PATH) -> None:
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         conn.execute(
             """
             INSERT INTO outcomes (execution_id, won, revenue, notes, recorded_at)
@@ -220,7 +295,7 @@ def record_outcome(execution_id: int, won: bool, revenue: float, notes: str = ""
 
 
 def get_recent_outcomes(limit: int = 100, db_path: Path = DB_PATH) -> list[dict[str, Any]]:
-    with sqlite3.connect(db_path) as conn:
+    with _connect(db_path) as conn:
         rows = conn.execute(
             """
             SELECT o.won, o.revenue, e.score
@@ -233,3 +308,115 @@ def get_recent_outcomes(limit: int = 100, db_path: Path = DB_PATH) -> list[dict[
         ).fetchall()
 
     return [{"won": bool(r[0]), "revenue": float(r[1]), "score": float(r[2])} for r in rows]
+
+
+def save_research_task(task: dict[str, Any], db_path: Path = DB_PATH) -> int:
+    init_db(db_path)
+    with _connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO research_tasks (task_id, mode, query, payload_json, created_at)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                str(task.get("task_id") or "default"),
+                str(task.get("mode") or "pain_monitor"),
+                str(task.get("query") or ""),
+                json.dumps(task),
+                utc_now(),
+            ),
+        )
+        return int(cur.lastrowid)
+
+
+def save_research_report(task_id: str, mode: str, report: dict[str, Any], db_path: Path = DB_PATH) -> int:
+    init_db(db_path)
+    from ori_analysis.report_generation import render_markdown_report
+
+    with _connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO research_reports (task_id, mode, report_json, report_markdown, created_at)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (task_id, mode, json.dumps(report), render_markdown_report(report), utc_now()),
+        )
+        return int(cur.lastrowid)
+
+
+def save_pain_signals(pain_points: list[dict[str, Any]], task_id: str, db_path: Path = DB_PATH) -> int:
+    init_db(db_path)
+    rows = [
+        (
+            task_id,
+            str(pain.get("id") or ""),
+            str(pain.get("source") or ""),
+            str(pain.get("source_type") or ""),
+            str(pain.get("title") or ""),
+            str(pain.get("url") or ""),
+            int(pain.get("severity") or 0),
+            json.dumps(pain.get("pain_terms") or []),
+            str(pain.get("evidence") or ""),
+            utc_now(),
+        )
+        for pain in pain_points
+    ]
+    if not rows:
+        return 0
+    with _connect(db_path) as conn:
+        conn.executemany(
+            """
+            INSERT INTO pain_signals (
+                task_id, pain_id, source, source_type, title, url,
+                severity, pain_terms_json, evidence, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            rows,
+        )
+    return len(rows)
+
+
+def save_theme_history(opportunities: list[dict[str, Any]], task_id: str, db_path: Path = DB_PATH) -> int:
+    init_db(db_path)
+    rows = [
+        (
+            task_id,
+            str(opp.get("id") or ""),
+            str(opp.get("theme") or ""),
+            float(opp.get("scores", {}).get("total", 0)),
+            int(opp.get("pain_count") or 0),
+            json.dumps(opp),
+            utc_now(),
+        )
+        for opp in opportunities
+    ]
+    if not rows:
+        return 0
+    with _connect(db_path) as conn:
+        conn.executemany(
+            """
+            INSERT INTO theme_history (task_id, opportunity_id, theme, score, pain_count, payload_json, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            rows,
+        )
+    return len(rows)
+
+
+def log_handoff(task_id: str, handoff: dict[str, Any], db_path: Path = DB_PATH) -> int:
+    init_db(db_path)
+    with _connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO handoff_log (task_id, status, next_agent, payload_json, created_at)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                task_id,
+                str(handoff.get("status") or ""),
+                handoff.get("next_agent"),
+                json.dumps(handoff),
+                utc_now(),
+            ),
+        )
+        return int(cur.lastrowid)
